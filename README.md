@@ -1,6 +1,6 @@
-# project_sustevents_v2
+# project_Easy Events
 
-> Upgraded version of sustevent
+> Upgraded version of sustevent, A progessive web application for event registration and e-ticket system build with Vue Js, Node, Express and Firebase
 
 ## Build Setup
 
