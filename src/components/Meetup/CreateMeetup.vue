@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
-        <h4>Create a new Meetup</h4>
+        <h4>Create a new Event</h4>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -46,28 +46,48 @@
           </v-layout>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-              <v-text-field
+              <v-textarea
                 name="description"
                 label="Description"
                 id="description"
                 multi-line
                 v-model="description"
-                required></v-text-field>
+                required></v-textarea>
             </v-flex>
           </v-layout>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-              <h4>Choose a Data & Time</h4>
+              <h4>Choose a Date & Time</h4>
             </v-flex>
           </v-layout>
           <v-layout row class="mb-2">
             <v-flex xs12 sm6 offset-sm3>
-              <v-date-picker v-model="date"></v-date-picker>
+              <v-date-picker v-model="date" :landscape="landscape" :reactive="reactive"></v-date-picker>
             </v-flex>
           </v-layout>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-time-picker v-model="time" format="24hr"></v-time-picker>
+            </v-flex>
+          </v-layout>
+          <v-layout row wrap>
+            <v-flex xs12 sm6 d-flex>
+              <v-select
+                :items="eventTypes"
+                label="Event Type"
+                v-model="eventType"
+              ></v-select>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 d-flex>
+              <v-text-field
+                name="ticketPrice"
+                label="Price of unit (BDT)"
+                id="ticketPrice"
+                v-model="ticketPrice"
+                type="number"
+                :disabled="freeEvent"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row>
@@ -92,9 +112,14 @@
         location: '',
         imageUrl: '',
         description: '',
-        date: new Date(),
+        date: new Date().toISOString().substr(0, 10),
+        landscape: false,
+        reactive: true,
         time: new Date(),
-        image: null
+        image: null,
+        eventTypes: ['Free', 'Ticketed'],
+        eventType: '',
+        ticketPrice: null
       }
     },
     computed: {
@@ -103,6 +128,11 @@
           this.location !== '' &&
           this.imageUrl !== '' &&
           this.description !== ''
+      },
+      freeEvent () {
+        if(this.eventType == "Ticketed") {
+          return false
+        } else return true
       },
       submittableDateTime () {
         const date = new Date(this.date)
@@ -131,7 +161,8 @@
           location: this.location,
           image: this.image,
           description: this.description,
-          date: this.submittableDateTime
+          date: this.submittableDateTime,
+          ticketPrice: this.ticketPrice
         }
         this.$store.dispatch('createMeetup', meetupData)
         this.$router.push('/meetups')

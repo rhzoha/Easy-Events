@@ -1,11 +1,12 @@
 // global variables
-window.endpoint = 'http://localhost:3000';
+window.endpoint = 'https://sustevents.mybluemix.net';
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VeeValidate from 'vee-validate';
+import * as VueGoogleMaps from 'vue2-google-maps'
 import App from './App'
 import * as firebase from 'firebase'
 import router from './router'
@@ -21,11 +22,24 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure
 import VueStripeCheckout from 'vue-stripe-checkout';
 
 Vue.use(Vuetify, {
-  iconfont: 'md'
+  iconfont: 'md',
+  theme: {
+    primary: '#43a047',
+    secondary: '#f9a825',
+    accent: '#8c9eff',
+    error: '#b71c1c'
+  }
 })
 Vue.use(VeeValidate)
 
 Vue.use(VueStripeCheckout, 'pk_test_f9xFVPvDUM4ObAQVmxb3wQrD00aVqrYx5v');
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBNLDwRv4ItlTJRouExNPpJokdKK859yDk',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+  },
+})
 
 Vue.config.productionTip = false
 

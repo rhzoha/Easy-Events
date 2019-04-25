@@ -13,7 +13,14 @@ $theme := {
 }
 
 @import '../../node_modules/vuetify/src/stylus/main'
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC|Oswald')
 
+html, body{
+  font-family: 'Oswald', sans-serif, 'Amatic SC', cursive;
+}
+#app {
+  font-family: 'Oswald', sans-serif, 'Amatic SC', cursive;
+}
 .custom-loader {
   animation: loader 1s infinite;
   display: flex;
@@ -21,6 +28,11 @@ $theme := {
 .rounded-card{
   border-radius: 10px
 }
+.bottom-btn-abs{
+  position: fixed;
+  bottom: 1rem;
+}
+
 @-moz-keyframes loader {
   from {
     transform: rotate(0);

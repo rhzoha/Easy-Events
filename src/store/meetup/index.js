@@ -62,7 +62,7 @@ export default {
               date: doc.data().date,
               location: doc.data().location,
               creatorId: doc.data().creatorId,
-              amount: doc.data().amount
+              ticketPrice: doc.data().ticketPrice
             })
           })
           // for (let key in obj) {
@@ -93,6 +93,7 @@ export default {
         location: payload.location,
         description: payload.description,
         date: payload.date.toISOString(),
+        ticketPrice: payload.ticketPrice,
         creatorId: getters.user.id,
         imageUrl: ''
       }

@@ -6,20 +6,22 @@
         fixed
         shift
         color="default"
+        style="border-top-left-radius: 10px;
+              border-top-right-radius: 10px;"
     >
         <v-btn flat color="primary" to="/" >
-            <span>Recents</span>
-            <v-icon>history</v-icon>
-        </v-btn>
-
-        <v-btn flat color="primary">
-            <span>Favorites</span>
-            <v-icon>favorite</v-icon>
+            <span>Home</span>
+            <v-icon>place</v-icon>
         </v-btn>
 
         <v-btn flat color="primary" to="/meetups" >
             <span>Nearby</span>
-            <v-icon>place</v-icon>
+            <v-icon>date_range</v-icon>
+        </v-btn>
+
+        <v-btn flat color="primary" to="/profile">
+            <span>Profile</span>
+            <v-icon>face</v-icon>
         </v-btn>
     </v-bottom-nav>
   </div>
@@ -31,7 +33,7 @@
 export default {
   data () {
     return {
-      activeBtn: 1,
+      activeBtn: 0,
       showNav: true
     }
   }

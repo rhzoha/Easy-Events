@@ -27,7 +27,8 @@ export default {
     registerUserForMeetup ({commit, getters}, payload) {
       commit('setLoading', true)
       const user = getters.user
-      firebase.database().ref('/users/' + user.id).child('/registrations/')
+      // firebase.database().ref('/users/' + user.id).child('/registrations/')
+      firebase.firestore().collection('users').doc()
         .push(payload)
         .then(data => {
           commit('setLoading', false)
@@ -59,39 +60,75 @@ export default {
     signUserUp ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
+      let docRefKey
+      let displayName
+      let photoURL
+      let uid
+      let bkash
       firebase.auth().createUserWithEmailAndPassword(payload.reg.email, payload.reg.password)
         .then(
           user => {
-            commit('setLoading', false)
-            const newUser = {
-              id: user.user.uid,
-              firstname: payload.reg.firstname,
-              lastname: payload.reg.lastname,
-              address: payload.reg.address,
-              city: payload.reg.city,
-              bkash: payload.reg.bkash,
-              visa: payload.reg.visa,
-              registeredMeetups: [],
-              fbKeys: {}
-            }
-            firebase.firestore().collection('users').add({
-              id: user.user.uid,
-              firstname: payload.reg.firstname,
-              lastname: payload.reg.lastname,
-              address: payload.reg.address,
-              city: payload.reg.city,
-              bkash: payload.reg.bkash,
-              visa: payload.reg.visa,
-              registeredMeetups: [],
-              fbKeys: {}
-            }) 
-            .then(function(docRef) {
-              console.log("Document successfully written!", docRef.id);
+            commit('setLoading', true)
+            uid = user.user.uid
+            displayName = payload.reg.displayName
+            bkash = payload.reg.bkash
+            photoURL = "https://example.com/jane-q-user/profile.jpg"
+            
+            let currentuser = firebase.auth().currentUser
+            currentuser.updateProfile({
+              displayName: displayName,
+              photoURL: photoURL,
+              phoneNumber: bkash
             })
-            .catch(function(error) {
-              console.error("Error writing document: ", error);
-            });
-            commit('setUser', newUser)
+            .then(() => {
+              //add user to firebase
+              firebase.firestore().collection('users').add({
+                id: uid,
+                displayName: displayName,
+                address: payload.reg.address,
+                city: payload.reg.city,
+                bkash: payload.reg.bkash,
+                visa: payload.reg.visa,
+                photoURL: photoURL,
+                docRefId: null,
+                registeredMeetups: [],
+                fbKeys: {}
+              })
+              .then((data) =>{
+                docRefKey = data.id
+                
+              })
+              .then(() => {
+                // return db.collection('meetups').doc(key).update({imageUrl: this.state.url})
+                db.collection('users').doc(docRefKey).update({docRefId: docRefKey})
+
+                //set new user for store
+                commit('setLoading', true)
+                const newUser = {
+                  id: uid,
+                  displayName: displayName,
+                  address: payload.reg.address,
+                  city: payload.reg.city,
+                  bkash: payload.reg.bkash,
+                  visa: payload.reg.visa,
+                  photoURL: photoURL,
+                  docRefId: docRefKey,
+                  registeredMeetups: [],
+                  fbKeys: {}
+                }
+                commit('setUser', newUser)
+              })
+            })
+            .catch(
+              error => {
+                commit('setLoading', false)
+                commit('setError', error)
+                console.log(error)
+              }
+            )
+            
+            //set new user for store
+            commit('setLoading', false)
           }
         )
         .catch(
@@ -109,8 +146,11 @@ export default {
         .then(
           user => {
             commit('setLoading', false)
+            let currentUser = firebase.auth().currentUser 
             const newUser = {
               id: user.user.uid,
+              displayName: currentUser.displayName,
+              photoURL: currentUser.photoURL,
               registeredMeetups: [],
               fbKeys: {}
             }
@@ -128,6 +168,8 @@ export default {
     autoSignIn ({commit}, payload) {
       commit('setUser', {
         id: payload.uid,
+        displayName: firebase.auth().currentUser.displayName,
+        photoURL: firebase.auth().currentUser.photoURL,
         registeredMeetups: [],
         fbKeys: {}
       })
@@ -145,6 +187,11 @@ export default {
           }
           const updatedUser = {
             id: getters.user.id,
+            displayName: getters.user.displayName,
+            address: getters.user.address,
+            city: getters.user.city,
+            bkash: getters.user.bkash,
+            visa: getters.user.visa,
             registeredMeetups: registeredMeetups,
             fbKeys: swappedPairs
           }

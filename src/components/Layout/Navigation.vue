@@ -69,7 +69,7 @@ export default {
   computed: {
     menuItems () {
       let menuItems = [
-        {icon: 'face', title: 'Sign up', link: '/signup'},
+        {icon: 'face', title: 'Sign up', link: '/register'},
         {icon: 'lock_open', title: 'Sign in', link: '/signin'}
       ]
       if (this.userIsAuthenticated) {

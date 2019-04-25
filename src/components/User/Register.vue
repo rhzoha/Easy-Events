@@ -14,24 +14,17 @@
                   <v-stepper-step step="1" :complete="step > 1">Your Information</v-stepper-step>
                     <v-divider></v-divider>
                   <v-stepper-step step="2" :complete="step > 2">Your Address</v-stepper-step>
-                    <v-divider></v-divider>
-                  <v-stepper-step step="3">Billing Info</v-stepper-step>
                 </v-stepper-header>
 
                 <v-stepper-items>
                   <v-stepper-content step="1" style="border-left: 0">
                     <v-text-field
-                      v-model="reg.firstname"
+                      v-model="reg.displayName"
                       :counter="10"
-                      label="First name"
+                      label="Username"
                       required
                     ></v-text-field>
-                    <v-text-field
-                      v-model="reg.lastname"
-                      :counter="10"
-                      label="Last name"
-                      required
-                    ></v-text-field>
+                  
                     <v-text-field
                       v-model="reg.email"
                       v-validate="'required|email'"
@@ -40,6 +33,7 @@
                       data-vv-name="reg.email"
                       required
                     ></v-text-field>
+
                     <v-text-field
                       v-model="reg.password"
                       v-validate="'required|min:6'"
@@ -74,12 +68,6 @@
                       label="Where do you live"
                       required
                     ></v-text-field>
-
-                    <v-btn flat @click.native="step = 1">Previous</v-btn>
-                    <v-btn color="primary" @click.native="step = 3" :disabled="formErrorStep2">Continue</v-btn>
-                  </v-stepper-content>
-
-                  <v-stepper-content step="3" style="border-left: 0">
                     <v-text-field
                       v-model="reg.bkash"
                       label="Bkash Account Number"
@@ -99,7 +87,7 @@
                       required
                     ></v-checkbox>
 
-                    <v-btn flat @click.native="step = 2">Previous</v-btn>
+                    <v-btn flat @click.native="step = 1">Previous</v-btn>
                     <v-btn color="primary" @click.prevent="onSignup" :disabled="formErrorStep3" :loading="loading">
                       Sign up
                        <span slot="loader" class="custom-loader">
@@ -125,8 +113,7 @@ export default {
   data: () => ({
     step: 1,
     reg: {
-      firstname:null,
-      lastname: null,
+      displayName: null,
       email: null,
       password: null,
       address: null,
@@ -152,7 +139,7 @@ export default {
       return this.reg.password !== this.reg.confirmpassword ? 'Passwords do not match' : ''
     },
     formErrorStep1() {
-      if(this.reg.firstname && this.reg.lastname != null && !this.errors.any()){
+      if(this.reg.displayName != null && !this.errors.any()){
         return false
       } else return true
     },

@@ -22,6 +22,13 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+      <v-btn
+        v-if="userIsAuthenticated"
+        flat
+        @click="onLogout">
+        <v-icon left dark>exit_to_app</v-icon>
+        Logout
+      </v-btn>
     </v-navigation-drawer>
     <v-toolbar
         :clipped-left="clipped"
@@ -53,7 +60,7 @@
     </v-toolbar>
     <main>
       <v-content>
-        <v-container fill-height grid-list-xl>
+        <v-container fill-height grid-list-xl style="padding:0px">
           <router-view class="mb-5"></router-view>
           <bottom-navigation />
         </v-container>
@@ -83,7 +90,7 @@
     computed: {
       menuItems () {
         let menuItems = [
-          {icon: 'face', title: 'Sign up', link: '/signup'},
+          {icon: 'face', title: 'Sign up', link: '/register'},
           {icon: 'lock_open', title: 'Sign in', link: '/signin'}
         ]
         if (this.userIsAuthenticated) {
@@ -103,10 +110,14 @@
       onLogout () {
         this.$store.dispatch('logout')
       }
-    }
+    },
+    mounted() {
+      
+    },
   }
 </script>
 
 <style lang="stylus">
+  @import url('https://fonts.googleapis.com/css?family=Amatic+SC|Oswald');
   @import './stylus/main'
 </style>
